@@ -29,8 +29,7 @@ $TeacherController = new TeacherController();
 
 try {
 
-    $data = json_decode(file_get_contents("php://input"), true);
-    echo $data['surname'];
+    $data = json_decode(file_get_contents("php://input"), true);    
 
     if(isset($data['name']) && isset($data['surname']) && isset($data['email']) && isset($data['password'])){
         $TeacherController->InsertTeacher($data['name'], $data['surname'], $data['email'], $data['password']);

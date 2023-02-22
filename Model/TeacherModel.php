@@ -12,7 +12,7 @@ class TeacherModel
     }
 
     function GetTeacherById($idTeacher){
-
+        //TODO
     }
 
     function GetTeacherByEmail($email){
@@ -31,7 +31,9 @@ class TeacherModel
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':surname', $surname);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $password); // TODO Hash
+
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt->bindParam(':password', $hash);
         $stmt->execute();
     }
 
