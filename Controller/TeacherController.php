@@ -15,11 +15,10 @@ class TeacherController
         if(count($this->TeacherModel->GetTeacherByEmail($email)) == 0){
             $this->TeacherModel->InsertTeacher($name, $surname, $email, $password);
             echo "Teacher added.";
-
         }
         else{
             // TODO: errorMessage
-            echo "email already used";
+            echo "Email already used.";
         }
         $this->TeacherModel->unsetConn();
     }

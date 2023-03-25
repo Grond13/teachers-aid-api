@@ -1,5 +1,8 @@
 <?php
 
+if(!isset($_SESSION['idTeacher'])){
+    //session_start();
+}
 class Connect
 {
 /*
