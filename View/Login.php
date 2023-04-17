@@ -1,6 +1,8 @@
 <?php
 
-session_start();          
+//session_start();  
+//print_r($_SESSION);
+
 require("../Connect.php");
 
 $conn = Connect::connect();
@@ -22,11 +24,12 @@ if (!empty($data["email"]) && !empty($data["password"])) {
 
         $hash = $pole[0];
 
-        if (password_verify($pass, $hash)) {              
-            $_SESSION['idTeacher'] = $pole[1];
-            /*echo "session:";
-            echo "Session ID: " . session_id();
-            print_r($_SESSION);*/
+        if (password_verify($pass, $hash)) {  
+            session_start();            
+            $_SESSION['idTeacher'] = $pole[1];                        
+            echo "session:";
+            /*echo "Session ID: " . session_id();*/
+            print_r($_SESSION);
         } else
             echo "Invalid email or password.";
     } catch (PDOException $e) {

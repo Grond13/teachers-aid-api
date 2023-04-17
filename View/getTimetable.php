@@ -20,6 +20,4 @@ else {
     echo "success";//json_encode($LessonTimeController->getTimeTable($_SESSION['idTeacher'])[0]);
 }*/
 
-
-
 echo json_encode($LessonTimeController->GetTimetable(12));
