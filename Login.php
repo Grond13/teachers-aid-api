@@ -1,7 +1,6 @@
 <?php
 
-session_start();          
-require("../Connect.php");
+require("./Connect.php");
 
 $conn = Connect::connect();
 
@@ -18,15 +17,14 @@ if (!empty($data["email"]) && !empty($data["password"])) {
 
         $stmt->execute();
         $result = $stmt->setFetchMode(PDO::FETCH_NUM);
-        $pole = $stmt->fetch(); 
+        $pole = $stmt->fetch();
 
         $hash = $pole[0];
 
-        if (password_verify($pass, $hash)) {              
+        if (password_verify($pass, $hash)) {
+            session_start();
             $_SESSION['idTeacher'] = $pole[1];
-            /*echo "session:";
-            echo "Session ID: " . session_id();
-            print_r($_SESSION);*/
+            print_r($_SESSION);
         } else
             echo "Invalid email or password.";
     } catch (PDOException $e) {
