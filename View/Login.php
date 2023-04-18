@@ -1,14 +1,14 @@
 <?php
 
-session_start();          
+session_start();
 require("../Connect.php");
 
 $conn = Connect::connect();
 
-$data = json_decode(file_get_contents("php://input"), true);    
+$data = json_decode(file_get_contents("php://input"), true);
 
 if (!empty($data["email"]) && !empty($data["password"])) {
-    
+
     $email = $data["email"];
     $pass = $data["password"];
     try {
@@ -18,19 +18,17 @@ if (!empty($data["email"]) && !empty($data["password"])) {
 
         $stmt->execute();
         $result = $stmt->setFetchMode(PDO::FETCH_NUM);
-        $pole = $stmt->fetch(); 
+        $pole = $stmt->fetch();
 
         $hash = $pole[0];
 
-        if (password_verify($pass, $hash)) {              
+        if (password_verify($pass, $hash)) {
             $_SESSION['idTeacher'] = $pole[1];
-            /*echo "session:";
-            echo "Session ID: " . session_id();
-            print_r($_SESSION);*/
+            echo true;
         } else
-            echo "Invalid email or password.";
+            echo false;
     } catch (PDOException $e) {
         echo "Unexpected error." . $e->getMessage();
     }
 } else
-    echo 'Missing email or password.';
+    echo false;
