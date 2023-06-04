@@ -11,10 +11,6 @@ class TeacherModel
         $this->conn = Connect::connect();
     }
 
-    function GetTeacherById($idTeacher){
-        //TODO
-    }
-
     function GetTeacherByEmail($email){
         $stmt = $this->conn->prepare("SELECT * FROM `kalivodjo`.`Teacher` where email = :email;");
         $stmt->bindParam(':email', $email);
