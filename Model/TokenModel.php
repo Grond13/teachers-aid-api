@@ -3,14 +3,16 @@ class TokenModel
 {
     private $conn;
 
-    public function __construct(PDO $conn)
+    public function __construct()
     {
-        $this->conn = $conn;
+        $this->conn = Connect::connect();
     }
 
     function DeleteTeachersTokens($idTeacher){
         $stmt = $this->conn->prepare("DELETE FROM `kalivodjo`.`token` where Teacher_idTeacher = :idTeacher;");
         $stmt->bindParam(':idTeacher', $idTeacher);
+
+        $stmt->execute();
     }
 
     function InsertToken($idTeacher, $token, $validUntil){
@@ -20,6 +22,16 @@ class TokenModel
         $stmt->bindParam(':validUntil', $validUntil);
         
         $stmt->execute();
+    }
+
+    function getToken($token){
+        $stmt = $this->conn->prepare("SELECT * FROM `kalivodjo`.`token` where token = :token;");
+        $stmt->bindParam(':token', $token);
+
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+        return $stmt->fetch();
     }
 
     function unsetConn(){

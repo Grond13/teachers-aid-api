@@ -5,9 +5,9 @@ include "../Model/TokenModel.php";
 class TokenController
 {
     private $TokenModel;
-    public function __construct(PDO $conn)
+    public function __construct()
     {
-        $this->TokenModel = new TokenModel($conn);
+        $this->TokenModel = new TokenModel();
     }
     
     public function SetNewToken($idTeacher){

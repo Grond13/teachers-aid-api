@@ -1,11 +1,10 @@
 <?php
 
-//session_start();
 require("../Connect.php");
 $conn = Connect::connect();
 
 include("../Controller/TokenController.php");
-$TokenController = new TokenController($conn);
+$TokenController = new TokenController();
 
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -24,9 +23,8 @@ if (!empty($data["email"]) && !empty($data["password"])) {
         $responseArray = $stmt->fetch();
 
         $hash = $responseArray[0];
-
-        if (password_verify($pass, $hash)) {
-            //$_SESSION['idTeacher'] = $pole[1];
+        $conn = null;
+        if (password_verify($pass, $hash)) {            
             echo $TokenController->SetNewToken($responseArray[1]);                        
         } else
             echo "ERROR: Authentification failed.";
@@ -35,3 +33,5 @@ if (!empty($data["email"]) && !empty($data["password"])) {
     }
 } else
     echo "ERROR: Unexpected error.";
+
+$conn = null;
