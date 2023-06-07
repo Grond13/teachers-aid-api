@@ -1,7 +1,6 @@
 <?php
-
-include("../Controller/LessonController.php");
-$LessonController = new LessonController();
+include("../Controller/LessonTimeController.php");
+$LessonTimeController = new LessonTimeController();
 
 include("../Controller/AuthenticationController.php");
 $AuthenticationController = new AuthenticationController();
@@ -12,8 +11,8 @@ $auth = $AuthenticationController->AuthenticateToken($postData["token"]);
 
 if($auth != false)
 {
-    echo json_encode($LessonController->GetLessonNames($auth));
+    echo $LessonTimeController->updateLessonTime($postData["lessonTime"]);
 }
 else{
-    echo "ERROR: Unauthorised."; 
+    echo "ERROR: Unauthorised.";
 }

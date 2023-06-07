@@ -13,4 +13,10 @@ class LessonTimeController
     function GetTimetable($idTeacher){
         return $this->LessonTimeModel->GetTimeTable($idTeacher);
     }
+    
+    function updateLessonTime($LessonTime){
+        return $this->LessonTimeModel->updateLessonTime($LessonTime);
+    }
+
+
 }
