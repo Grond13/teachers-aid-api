@@ -15,7 +15,9 @@ class AuthenticationController
     
         $validUntil = new DateTime($responseToken["validUntil"]);
         $now = new DateTime();
-    
+            
+        $this->TokenModel->unsetConn();
+
         if ($validUntil > $now) {   
             return $responseToken["Teacher_idTeacher"];
         } else {

@@ -11,12 +11,26 @@ class LessonTimeController
     }
 
     function GetTimetable($idTeacher){
-        return $this->LessonTimeModel->GetTimeTable($idTeacher);
+        $result = $this->LessonTimeModel->GetTimeTable($idTeacher);
+        $this->LessonTimeModel->unsetConn();
+        return $result;
     }
     
     function updateLessonTime($LessonTime){
-        return $this->LessonTimeModel->updateLessonTime($LessonTime);
+        $result = $this->LessonTimeModel->updateLessonTime($LessonTime);
+        $this->LessonTimeModel->unsetConn();
+        return $result;
     }
 
+    function insertLessonTime($LessonTime){
+        $result = $this->LessonTimeModel->insertLessonTime($LessonTime);
+        $this->LessonTimeModel->unsetConn();
+        return $result;
+    }
 
+    function deleteLessonTime($idLessonTime){
+        $result = $this->LessonTimeModel->deleteLessonTime($idLessonTime);
+        $this->LessonTimeModel->unsetConn();
+        return $result;
+    }
 }

@@ -2,7 +2,7 @@
 include "../Connect.php";
 
 
-class LessonTimeModel
+class LessonModel
 {
     private $conn;
 
@@ -15,7 +15,7 @@ class LessonTimeModel
     function GetLessonNames($teacherId)
     {        
         try {
-            $stmt = $this->conn->prepare("SELECT l.idLesson, l.name FROM `kalivodjo`.`lesson` l                         
+            $stmt = $this->conn->prepare("SELECT DISTINCT l.idLesson, l.name FROM `kalivodjo`.`lesson` l                         
             WHERE l.Teacher_idTeacher = :idTeacher");
 
             $stmt->bindParam(':idTeacher', $teacherId);

@@ -1,5 +1,5 @@
 <?php
-
+include "../Model/LessonModel.php";
 class LessonController
 {
     private $LessonModel;
@@ -9,6 +9,8 @@ class LessonController
     }
 
     function GetLessonNames($teacherId) {
-        return $this->LessonModel->GetLessonNames($teacherId);        
+        $result = $this->LessonModel->GetLessonNames($teacherId);        
+        $this->LessonModel->unsetConn();        
+        return $result;
     }
 }
