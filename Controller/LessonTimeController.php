@@ -33,4 +33,9 @@ class LessonTimeController
         $this->LessonTimeModel->unsetConn();
         return $result;
     }
+
+    function getClass($idLessonTime){
+        
+    }
 }
+

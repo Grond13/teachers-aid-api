@@ -5,20 +5,23 @@ if (!isset($_SESSION['idTeacher'])) {
 }
 
 class Connect
-{
+{    
     /*
         private static $servername = "localhost";
         private static $username = "kalivodjo";
         private static $password = "KrAKeN-25.8.2000";
         private static $dbname = "kalivodjo";
     */
+    
     private static $servername = "localhost";
     private static $username = "root";
     private static $password = "";
     private static $dbname = "kalivodjo";
+    
+
     private static $setConnection = null;
 
-    public static function connect()
+        public static function connect()
     {
         if (self::$setConnection != null) {
             return self::$setConnection;

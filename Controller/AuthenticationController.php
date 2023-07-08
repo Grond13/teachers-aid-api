@@ -13,6 +13,8 @@ class AuthenticationController
     function AuthenticateToken($token) {
         $responseToken = $this->TokenModel->getToken($token);
     
+        //var_dump($responseToken);
+
         $validUntil = new DateTime($responseToken["validUntil"]);
         $now = new DateTime();
             

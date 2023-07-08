@@ -90,6 +90,10 @@ class LessonTimeModel
         }
     }
     
+    function getClass($idLessonTime){
+
+    }
+
 
     function unsetConn()
     {
