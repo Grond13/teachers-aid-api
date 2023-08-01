@@ -13,4 +13,10 @@ class ClassroomController
         $this->ClassroomModel->unsetConn();
         return $result;
     }
+
+    function insertClassroom($specs, $teacherId) {
+        return $this->ClassroomModel->insertClassroom($specs, $teacherId); 
+    }
+
+
 }

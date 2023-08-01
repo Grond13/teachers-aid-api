@@ -1,8 +1,7 @@
 <?php
-
 include("../Controller/LessonTimeController.php");
 $LessonTimeController = new LessonTimeController();
-/*
+
 include("../Controller/AuthenticationController.php");
 $AuthenticationController = new AuthenticationController();
 
@@ -10,21 +9,21 @@ $postData = json_decode(file_get_contents("php://input"), true);
 
 $auth = $AuthenticationController->AuthenticateToken($postData["token"]);
 
-if($auth != false)
-{
-   
+if ($auth != false) {	
+	echo json_encode($LessonTimeController->GetTeachingSession($postData["lessonTime"]));
+} else {
+	echo "ERROR: Unauthorised.";
 }
-else{
 
-}*/
 
+/*
 echo
 	'[
-    [
-        [
-            {		
+	[
+		[
+			{		
 		"idStudent": "1",
-                "name": "Jonáš",
+				"name": "Jonáš",
 		"surname": "Kalivoda",
 		"activityValue": "0",
 		"smallGrades": 
@@ -57,9 +56,9 @@ echo
 		],
 		"note": "problémy s výslovností schwa, zájem o četbu fantasy žánru"
 			},
-            {
+			{
 		"idStudent": "2",
-                "name": "Tomáš",
+				"name": "Tomáš",
 		"surname": "Krabička",
 		"activityValue": "1",
 		"smallGrades": 
@@ -90,12 +89,12 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            }
-        ],
-        [
-            {
+			}
+		],
+		[
+			{
 		"idStudent": "3",
-                "name": "Jonáš",
+				"name": "Jonáš",
 		"surname": "Kalivoda",
 		"activityValue": "2",
 		"smallGrades": 
@@ -126,10 +125,10 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            },
-            {
+			},
+			{
 		"idStudent": "4",
-                "name": "Tomáš",
+				"name": "Tomáš",
 		"surname": "Krabička",
 		"activityValue": "3",
 		"smallGrades": 
@@ -160,12 +159,12 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            }
-        ],
-        [
-            {
+			}
+		],
+		[
+			{
 		"idStudent": "5",
-                "name": "Jonáš",
+				"name": "Jonáš",
 		"surname": "Kalivoda",
 		"activityValue": "4",
 		"smallGrades": 
@@ -196,10 +195,10 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            },
-            {
+			},
+			{
 		"idStudent": "6",
-                "name": "Tomáš",
+				"name": "Tomáš",
 		"surname": "Krabička",
 		"activityValue": "5",
 		"smallGrades": 
@@ -230,14 +229,14 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            }
-        ]
-    ],
-    [
-        [
-            {
+			}
+		]
+	],
+	[
+		[
+			{
 		"idStudent": "7",
-                "name": "Jonáš",
+				"name": "Jonáš",
 		"surname": "Kalivoda",
 		"activityValue": "6",
 		"smallGrades": 
@@ -268,10 +267,10 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            },
-            {
+			},
+			{
 		"idStudent": "8",
-                "name": "Tomáš",
+				"name": "Tomáš",
 		"surname": "Krabička",
 		"activityValue": "7",
 		"smallGrades": 
@@ -302,12 +301,12 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            }
-        ],
-        [
-            {
+			}
+		],
+		[
+			{
 		"idStudent": "9",
-                "name": "Jonáš",
+				"name": "Jonáš",
 		"surname": "Kalivoda",
 		"activityValue": "8",
 		"smallGrades": 
@@ -338,10 +337,10 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            },
-            {
+			},
+			{
 		"idStudent": "10",
-                "name": "Tomáš",
+				"name": "Tomáš",
 		"surname": "Krabička",
 		"activityValue": "9",
 		"smallGrades": 
@@ -372,12 +371,12 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            }
-        ],
-        [
-            {
+			}
+		],
+		[
+			{
 		"idStudent": "11",
-                "name": "Jonáš",
+				"name": "Jonáš",
 		"surname": "Kalivoda",
 		"activityValue": "5",
 		"smallGrades": 
@@ -408,10 +407,10 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            },
-            {
+			},
+			{
 		"idStudent": "12",
-                "name": "Tomáš",
+				"name": "Tomáš",
 		"surname": "Krabička",
 		"activityValue": "5",
 		"smallGrades": 
@@ -442,14 +441,14 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            }
-        ]
-    ],
-    [
-        [
-            {
+			}
+		]
+	],
+	[
+		[
+			{
 		"idStudent": "13",
-                "name": "Jonáš",
+				"name": "Jonáš",
 		"surname": "Kalivoda",
 		"activityValue": "5",
 		"smallGrades": 
@@ -480,10 +479,10 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            },
-            {
+			},
+			{
 		"idStudent": "14",
-                "name": "Tomáš",
+				"name": "Tomáš",
 		"surname": "Krabička",
 		"activityValue": "5",
 		"smallGrades": 
@@ -514,12 +513,12 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            }
-        ],
-        [
-            {
+			}
+		],
+		[
+			{
 		"idStudent": "15",
-                "name": "Jonáš",
+				"name": "Jonáš",
 		"surname": "Kalivoda",
 		"activityValue": "5",
 		"smallGrades": 
@@ -550,10 +549,10 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            },
-            {
+			},
+			{
 		"idStudent": "16",
-                "name": "Tomáš",
+				"name": "Tomáš",
 		"surname": "Krabička",
 		"activityValue": "5",
 		"smallGrades": 
@@ -584,12 +583,12 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            }
-        ],
-        [
-            {
+			}
+		],
+		[
+			{
 		"idStudent": "17",
-                "name": "Jonáš",
+				"name": "Jonáš",
 		"surname": "Kalivoda",
 		"activityValue": "5",
 		"smallGrades": 
@@ -620,10 +619,10 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            },
-            {
+			},
+			{
 		"idStudent": "18",
-                "name": "Tomáš",
+				"name": "Tomáš",
 		"surname": "Krabička",
 		"activityValue": "5",
 		"smallGrades": 
@@ -654,16 +653,16 @@ echo
 				"description": "Práce v hodině" 
 			}
 		]
-            }
-        ]
-    ],
+			}
+		]
+	],
 	
-    [
-        [
-            {
-                "name": "Katedra",
-                "isTeachersDesk": true
-            }
-        ]
-    ]
-]';
+	[
+		[
+			{
+				"name": "Katedra",
+				"isTeachersDesk": true
+			}
+		]
+	]
+]';*/

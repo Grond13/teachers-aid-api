@@ -54,7 +54,7 @@ class LessonTimeModel
         }
     }
 
-    function insertLessonTime($LessonTime)
+function insertLessonTime($LessonTime)
     {
         try {
             $stmt = $this->conn->prepare("INSERT INTO `lessontime` (`idLessonTime`, `start`, `end`, `day`, `note`, `editableUntil`, `Lesson_idLesson`, `Classroom_idClassroom`) VALUES (null, :start, :end, :day, :note, :editableUntil, :idLesson, :idClassroom)");
@@ -90,14 +90,109 @@ class LessonTimeModel
         }
     }
     
-    function getClass($idLessonTime){
+    function getTeachingSession($idLessonTime) {
+        $idLesson = $this->getLessonByLessonTime($idLessonTime);
 
+        try {
+            $stmt = $this->conn->prepare("
+                SELECT st.idStudent, st.name, st.surname, s.idSeat, sr.activityValue, sr.note                      
+                FROM `lessonTime` l                                
+                INNER JOIN `student_has_lessontime` slt ON l.idLessontime = slt.lessontime_idLessontime         
+                INNER JOIN `student` st ON slt.Student_idStudent = st.idStudent
+                INNER JOIN `seat` s on st.idStudent = s.student_idStudent
+                INNER JOIN `studentRating` sr on st.idStudent = sr.student_idStudent
+                WHERE l.idLessonTime = :idLessonTime 
+            "); // TODO: functional but not correct, should be checking idLesson too
+
+            $stmt->bindParam(':idLessonTime', $idLessonTime);
+                
+            $stmt->execute();
+    
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            return $e;
+        }
     }
 
+    function addRatings($idLessonTime, $students) {
+        $idLesson = $this->getLessonByLessonTime($idLessonTime);
+            
+        try {
+            $stmt = $this->conn->prepare("
+                SELECT sg.StudentRating_Student_idStudent, sg.isPlus, sg.description, sg.date                                 
+                FROM `smallGrade` sg                                  
+                WHERE sg.studentRating_Lesson_idLesson = :idLesson
+                ORDER BY sg.StudentRating_Student_idStudent, sg.date
+            ");        
+            $stmt->bindParam(':idLesson', $idLesson);
+                   
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $smallGrades = $stmt->fetchAll();
+    
+            $smallGradesByStudent = array();
+            foreach ($smallGrades as $smallGrade) {
+                $idStudent = $smallGrade['StudentRating_Student_idStudent'];
+                $smallGradesByStudent[$idStudent][] = $smallGrade;
+            }
+    
+            foreach ($students as &$student) {
+                $idStudent = $student['idStudent'];
+                if (isset($smallGradesByStudent[$idStudent])) {
+                    $student['smallGrades'] = $smallGradesByStudent[$idStudent];
+                } else {
+                    $student['smallGrades'] = array();
+                }
+            }
+    
+            return $students;            
+        } catch (PDOException $e) {
+            return $e;
+        }
+    }
+    
+    
+    function getLayout($idLessonTime) {
+        try {
+            $stmt = $this->conn->prepare("
+                SELECT s.idSeat, s.seatNumber, d.y as 'row', d.x as 'column', d.isTeachersDesk, d.idDesk                               
+                FROM `seat` s                
+                INNER JOIN `desk` d ON s.Desk_idDesk = d.idDesk
+                INNER JOIN `classroom` c ON d.Classroom_idClassroom = c.idClassroom                 
+                INNER JOIN `lessontime` l ON c.idClassroom = l.Classroom_idClassroom                        
+                WHERE l.idLessonTime = :idLessonTime
+                ORDER BY d.y, d.x 
+            ");
+        
+            $stmt->bindParam(':idLessonTime', $idLessonTime);
+                
+            $stmt->execute();
+    
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            return $e;
+        }
+    }    
+
+    function getLessonByLessonTime($idLessonTime){
+        try {
+            $stmt = $this->conn->prepare("SELECT l.idLesson from `lesson` l INNER JOIN lessonTime lt on l.idLesson = lt.Lesson_idLesson WHERE lt.idLessonTime = :idLessonTime");
+        
+            $stmt->bindParam(':idLessonTime', $idLessonTime);
+                
+            $stmt->execute();
+    
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            return $stmt->fetch()['idLesson'];
+        } catch (PDOException $e) {
+            return $e;
+        }
+    }
 
     function unsetConn()
     {
         $this->conn = null;
     }
-
 }

@@ -11,7 +11,7 @@ $auth = $AuthenticationController->AuthenticateToken($postData["token"]);
 
 if($auth != false)
 {
-    echo $postData["specs"]["columns"];
+    echo $ClassroomController->insertClassroom($postData["specs"], $auth);    
 }
 else{
     echo "ERROR: Unauthorised.";
