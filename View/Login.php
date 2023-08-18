@@ -1,7 +1,10 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 require("../Connect.php");
-$conn = Connect::connect();
+$conn = Connect::connectToDb();  
 
 include("../Controller/TokenController.php");
 $TokenController = new TokenController();
@@ -14,7 +17,7 @@ if (!empty($data["email"]) && !empty($data["password"])) {
     $pass = $data["password"];   
 
     try {
-        $stmt = $conn->prepare("SELECT `password`, `idTeacher`, `name`, `surname`, `email` from Teacher where `email` = :email ");
+        $stmt = $conn->prepare("SELECT `password`, `idTeacher`, `name`, `surname`, `email` from teacher where `email` = :email ");
 
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
 

@@ -8,12 +8,12 @@ class LessonModel
 
     public function __construct()
     {
-        $this->conn = Connect::connect();
+        $this->conn = Connect::connectToDb();
     }
 
-    
+
     function GetLessonNames($teacherId)
-    {        
+    {
         try {
             $stmt = $this->conn->prepare("SELECT DISTINCT l.idLesson, l.name FROM `kalivodjo`.`lesson` l                         
             WHERE l.Teacher_idTeacher = :idTeacher");
@@ -28,6 +28,15 @@ class LessonModel
         } catch (PDOException $e) {
             return $e;
         }
+    }
+    function InsertLesson($idTeacher, $name)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO `kalivodjo`.`lesson` (`idLesson`, `name`, `Teacher_idTeacher`) 
+            VALUES (null, :name, :idTeacher);");
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':idTeacher', $idTeacher);
+        $stmt->execute();
+        return "Lesson added.";
     }
 
     function unsetConn()

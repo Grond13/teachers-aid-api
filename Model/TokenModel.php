@@ -5,7 +5,7 @@ class TokenModel
 
     public function __construct()
     {
-        $this->conn = Connect::connect();
+        $this->conn = Connect::connectToDb();
     }
 
     function DeleteTeachersTokens($idTeacher){

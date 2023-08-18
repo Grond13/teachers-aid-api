@@ -8,11 +8,11 @@ class TeacherModel
 
     public function __construct()
     {
-        $this->conn = Connect::connect();
+        $this->conn = Connect::connectToDb();
     }
 
     function GetTeacherByEmail($email){
-        $stmt = $this->conn->prepare("SELECT * FROM `kalivodjo`.`Teacher` where email = :email;");
+        $stmt = $this->conn->prepare("SELECT * FROM `kalivodjo`.`teacher` where email = :email;");
         $stmt->bindParam(':email', $email);
 
         $stmt->execute();
@@ -23,7 +23,7 @@ class TeacherModel
     }
 
     function InsertTeacher($name, $surname, $email, $password){
-        $stmt = $this->conn->prepare("INSERT INTO `kalivodjo`.`Teacher` (`idTeacher`, `name`, `surname`, `email`, `password`) VALUES (null, :name, :surname, :email, :password);");
+        $stmt = $this->conn->prepare("INSERT INTO `kalivodjo`.`teacher` (`idTeacher`, `name`, `surname`, `email`, `password`) VALUES (null, :name, :surname, :email, :password);");
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':surname', $surname);
         $stmt->bindParam(':email', $email);

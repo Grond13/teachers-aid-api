@@ -13,4 +13,10 @@ class LessonController
         $this->LessonModel->unsetConn();        
         return $result;
     }
+
+    function InsertLesson($teacherId, $name) {
+        $result = $this->LessonModel->insertLesson($teacherId, $name);         
+        $this->LessonModel->unsetConn();        
+        return $result;
+    }
 }

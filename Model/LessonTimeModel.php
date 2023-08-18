@@ -8,7 +8,7 @@ class LessonTimeModel
 
     public function __construct()
     {
-        $this->conn = Connect::connect();
+        $this->conn = Connect::connectToDb();
     }
 
     function GetTimetable($teacherId)
@@ -35,7 +35,7 @@ class LessonTimeModel
     {
         try {
 
-            $stmt = $this->conn->prepare("UPDATE LessonTime SET day = :day, start = :start, end = :end, note = :note, editableUntil = :editableUntil, Classroom_idClassroom = :idClassroom, Lesson_idLesson = :idLesson WHERE idLessonTime = :idLessonTime");
+            $stmt = $this->conn->prepare("UPDATE lessontime SET day = :day, start = :start, end = :end, note = :note, editableUntil = :editableUntil, Classroom_idClassroom = :idClassroom, Lesson_idLesson = :idLesson WHERE idLessonTime = :idLessonTime");
 
             $stmt->bindParam(':day', $LessonTime['day']);
             $stmt->bindParam(':start', $LessonTime['start']);
@@ -78,10 +78,12 @@ function insertLessonTime($LessonTime)
     function deleteLessonTime($idLessonTime)
     {
         try {
-            $stmt = $this->conn->prepare("DELETE FROM `lessontime` WHERE idLessonTime = :idLessonTime");
-        
-            $stmt->bindParam(':idLessonTime', $idLessonTime);
-    
+            $stmt = $this->conn->prepare("DELETE FROM `student_has_lessontime` WHERE LessonTime_idLessonTime = :idLessonTime");
+            $stmt->bindParam(':idLessonTime', $idLessonTime);    
+            $stmt->execute();
+
+            $stmt = $this->conn->prepare("DELETE FROM `lessontime` WHERE idLessonTime = :idLessonTime");        
+            $stmt->bindParam(':idLessonTime', $idLessonTime);    
             $stmt->execute();
     
             return "SUCCESS: Deleted successfully.";
@@ -96,11 +98,11 @@ function insertLessonTime($LessonTime)
         try {
             $stmt = $this->conn->prepare("
                 SELECT st.idStudent, st.name, st.surname, s.idSeat, sr.activityValue, sr.note                      
-                FROM `lessonTime` l                                
-                INNER JOIN `student_has_lessontime` slt ON l.idLessontime = slt.lessontime_idLessontime         
+                FROM `lessontime` l                                
+                INNER JOIN `student_has_lessontime` slt ON l.idLessontime = slt.LessonTime_idLessonTime         
                 INNER JOIN `student` st ON slt.Student_idStudent = st.idStudent
-                INNER JOIN `seat` s on st.idStudent = s.student_idStudent
-                INNER JOIN `studentRating` sr on st.idStudent = sr.student_idStudent
+                INNER JOIN `seat` s on st.idStudent = s.Student_idStudent
+                INNER JOIN `studentrating` sr on st.idStudent = sr.Student_idStudent
                 WHERE l.idLessonTime = :idLessonTime 
             "); // TODO: functional but not correct, should be checking idLesson too
 
@@ -108,7 +110,7 @@ function insertLessonTime($LessonTime)
                 
             $stmt->execute();
     
-            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);  
             return $stmt->fetchAll();
         } catch (PDOException $e) {
             return $e;
@@ -120,9 +122,9 @@ function insertLessonTime($LessonTime)
             
         try {
             $stmt = $this->conn->prepare("
-                SELECT sg.StudentRating_Student_idStudent, sg.isPlus, sg.description, sg.date                                 
-                FROM `smallGrade` sg                                  
-                WHERE sg.studentRating_Lesson_idLesson = :idLesson
+                SELECT sg.StudentRating_Student_idStudent, sg.isPlus, sg.description, DATE_FORMAT(sg.date, '%d. %m. %Y') AS date
+                FROM `smallgrade` sg                                  
+                WHERE sg.StudentRating_Lesson_idLesson = :idLesson
                 ORDER BY sg.StudentRating_Student_idStudent, sg.date
             ");        
             $stmt->bindParam(':idLesson', $idLesson);
@@ -130,7 +132,7 @@ function insertLessonTime($LessonTime)
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $smallGrades = $stmt->fetchAll();
-    
+
             $smallGradesByStudent = array();
             foreach ($smallGrades as $smallGrade) {
                 $idStudent = $smallGrade['StudentRating_Student_idStudent'];
@@ -151,6 +153,32 @@ function insertLessonTime($LessonTime)
             return $e;
         }
     }
+
+    function getSeatSelection($idLessonTime) {
+        $idLesson = $this->getLessonByLessonTime($idLessonTime);
+    
+        try {
+            $stmt = $this->conn->prepare("
+                SELECT st.idStudent, CONCAT(SUBSTR(st.name, 1, 1), '.') AS name, 
+                       CONCAT(SUBSTR(st.surname, 1, 1), '.') AS surname, s.idSeat                      
+                FROM `lessontime` l                                
+                INNER JOIN `student_has_lessontime` slt ON l.idLessonTime = slt.LessonTime_idLessonTime         
+                INNER JOIN `student` st ON slt.Student_idStudent = st.idStudent
+                INNER JOIN `seat` s on st.idStudent = s.Student_idStudent                
+                WHERE l.idLessonTime = :idLessonTime 
+            "); // TODO: functional but not correct, should be checking idLesson too
+    
+            $stmt->bindParam(':idLessonTime', $idLessonTime);
+                
+            $stmt->execute();
+    
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            return $e;
+        }
+    }
+    
     
     
     function getLayout($idLessonTime) {
@@ -178,7 +206,7 @@ function insertLessonTime($LessonTime)
 
     function getLessonByLessonTime($idLessonTime){
         try {
-            $stmt = $this->conn->prepare("SELECT l.idLesson from `lesson` l INNER JOIN lessonTime lt on l.idLesson = lt.Lesson_idLesson WHERE lt.idLessonTime = :idLessonTime");
+            $stmt = $this->conn->prepare("SELECT l.idLesson from `lesson` l INNER JOIN lessontime lt on l.idLesson = lt.Lesson_idLesson WHERE lt.idLessonTime = :idLessonTime");
         
             $stmt->bindParam(':idLessonTime', $idLessonTime);
                 

@@ -8,14 +8,14 @@ class ClassroomModel
 
     public function __construct()
     {
-        $this->conn = Connect::connect();
+        $this->conn = Connect::connectToDb();
     }
 
 
     function GetClassroomNames($teacherId)
     {
         try {
-            $stmt = $this->conn->prepare("SELECT DISTINCT c.idClassroom, c.name FROM `kalivodjo`.`Classroom` c
+            $stmt = $this->conn->prepare("SELECT DISTINCT c.idClassroom, c.name FROM `kalivodjo`.`classroom` c
             WHERE c.idTeacher = :idTeacher");
 
             $stmt->bindParam(':idTeacher', $teacherId);
@@ -49,7 +49,7 @@ class ClassroomModel
                     $stmt->bindParam(':deskSize', $specs['deskSize']);
                     $stmt->bindParam(':x', $x);
                     $stmt->bindParam(':y', $y);
-                    $stmt->bindValue(':isTeachersDesk', false);
+                    $stmt->bindValue(':isTeachersDesk', 0);
                     $stmt->bindParam(':idClassroom', $idClassroom);
                     $stmt->execute();
 
@@ -68,7 +68,7 @@ class ClassroomModel
             $stmt->bindParam(':x', $specs['teachersDeskRow']);
             $teachersRow = $specs['rows'] + 1; 
             $stmt->bindParam(':y', $teachersRow);
-            $stmt->bindValue(':isTeachersDesk', true);
+            $stmt->bindValue(':isTeachersDesk', 1);
             $stmt->bindParam(':idClassroom', $idClassroom);
             $stmt->execute();
 
