@@ -11,8 +11,7 @@ class StudentModel
         $this->conn = Connect::connectToDb();
     }
 
-    function RegisterStudent($idStudent, $LessonTimes, $idSeat)
-    {
+    function RegisterStudent($idStudent, $LessonTimes){
         try {
             $stmt = $this->conn->prepare("INSERT INTO `kalivodjo`.`student_has_lessontime` (`Student_idStudent`, `LessonTime_idLessonTime`) VALUES (:idStudent, :idLessonTime);");
 
@@ -24,6 +23,14 @@ class StudentModel
             }
         } catch (PDOException $e) {
             return $e;
+        }
+    }
+
+    function SeatStudent($idStudent, $idSeat, $idLessonTime)
+    {        
+        if(!$this->StudentIsRegistered($idStudent, $idLessonTime)){
+
+            $this->RegisterStudent($idStudent, array(0 => array("idLessonTime" => $idLessonTime)));
         }
 
         $stmt = $this->conn->prepare("SELECT * FROM `kalivodjo`.`seat` s where s.idSeat = :idSeat");
@@ -48,18 +55,29 @@ class StudentModel
                 return $e;
             }
         } else {
-            try {
-                $stmt = $this->conn->prepare("INSERT INTO `kalivodjo`.`seat` (`idSeat`, `Student_idStudent`, `Desk_idDesk`, `seatNumber`) VALUES (null, :idStudent, :idDesk, :seatNumber)");
-                $stmt->bindParam(':idStudent', $idStudent);
-                $stmt->bindParam(':idDesk', $seat['Desk_idDesk']);
-                $stmt->bindParam(':seatNumber', $seat['seatNumber']);
+            return "Seat is not empty";
+        }
+    }
 
-                $stmt->execute();
+    function StudentIsRegistered($idStudent, $idLessonTime){
+        try {
+            $stmt = $this->conn->prepare("SELECT Student_idStudent as idStudent from student_has_lessontime
+            WHERE LessonTime_idLessonTime = :idLessonTime AND Student_idStudent = :idStudent");
+    
+            $stmt->bindParam(':idLessonTime', $idLessonTime);
+            $stmt->bindParam(':idStudent', $idStudent);            
+    
+            $stmt->execute();
+    
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);            
 
-                return "New seat inserted successfully.";
-            } catch (PDOException $e) {
-                return $e;
+            if ($result) {
+                return true;
+            } else {
+                return false;
             }
+        } catch (PDOException $e) {
+            echo $e;
         }
     }
 
@@ -87,9 +105,6 @@ class StudentModel
         } catch (PDOException $e) {
             return $e;
         }
-
-
-
     }
 
     function getAllLessonTimesByLesson($idLesson)
@@ -132,23 +147,28 @@ class StudentModel
             INNER JOIN student_has_lessontime slt on slt.LessonTime_idLessonTime = lt.idLessonTime 
             INNER JOIN student s on slt.Student_idStudent = s.idStudent
             WHERE l.idLesson = :idLesson AND s.name = :name AND s.surname = :surname");
-
+    
             $stmt->bindParam(':idLesson', $idLesson);
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':surname', $surname);
-
+    
             $stmt->execute();
+    
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            print_r($result);            
 
-            $stmt->setFetchMode(PDO::FETCH_DEFAULT);
-
-            if ($stmt->fetchAll() != null)
-                return true;
-            else
+            if ($result) {
+                return $result['idStudent'];
+            } else {
                 return false;
+            }
         } catch (PDOException $e) {
             echo $e;
         }
     }
+    
+
     function unsetConn()
     {
         $this->conn = null;

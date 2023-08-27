@@ -55,7 +55,7 @@ class LessonTimeModel
     }
 
 function insertLessonTime($LessonTime)
-    {
+    {       
         try {
             $stmt = $this->conn->prepare("INSERT INTO `lessontime` (`idLessonTime`, `start`, `end`, `day`, `note`, `editableUntil`, `Lesson_idLesson`, `Classroom_idClassroom`) VALUES (null, :start, :end, :day, :note, :editableUntil, :idLesson, :idClassroom)");
 

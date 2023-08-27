@@ -13,10 +13,11 @@ class StudentController
         $idStudent = $this->StudentModel->StudentExists($name, $surname, $idLesson);
 
         if(!$idStudent){
-            $idStudent = $this->StudentModel->InsertStudent($name, $surname, $idLesson);                             
+            $idStudent = $this->StudentModel->InsertStudent($name, $surname, $idLesson); 
+            $result = $this->StudentModel->RegisterStudent($idStudent, $this->StudentModel->getAllLessonTimesByLesson($idLesson));                             
         }
         
-        $result = $this->StudentModel->RegisterStudent($idStudent, $this->StudentModel->getAllLessonTimesByLesson($idLesson), $idSeat); 
+        $result = $this->StudentModel->SeatStudent($idStudent, $idSeat, $idLessontime); 
 
         $this->StudentModel->unsetConn();        
         return $result; 
